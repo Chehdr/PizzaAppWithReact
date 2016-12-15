@@ -1,0 +1,11 @@
+.EditForm{
+   	border: 1px solid #e7e7e7;
+    background-color: whitesmoke;
+    padding-top: 8px;
+    padding-bottom: 8px;
+} 
+
+.panel-body > .accounts > .form-group {
+    margin-bottom: 0px;
+    float: right;
+}
