@@ -14,7 +14,7 @@ export default class PanelPage extends Component {
         <div className="container">
           <div className="panel panel-default">
             <div className="panel-body"><Accounts.ui.LoginForm formState={STATES.PROFILE} /></div>
-            <div className="panel-footer"><PostContainer /></div>
+            <div className="panel-footer"><PanelContainer /></div>
           </div>
         </div>
     </div>
@@ -22,7 +22,7 @@ export default class PanelPage extends Component {
     );
   }
 }
-class PostContainer extends TrackerReact(React.Component) {
+class PanelContainer extends TrackerReact(React.Component) {
 
   constructor() {
     super();
@@ -32,8 +32,8 @@ class PostContainer extends TrackerReact(React.Component) {
     let Role = Roles.getRolesForUser( Meteor.userId() )[0];
     switch(Role){
       case 'guest' : return <GuestPage />;
-      case 'admin' : return <GuestPage />;
-      case 'user' : return <GuestPage />;
+      case 'admin' : return <AdminPage />;
+      case 'user' : return <UserPage />;
     }
   }
   render() {
