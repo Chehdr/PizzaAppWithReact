@@ -3,7 +3,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import '../../../api/groups/groups.js';
 
-export default class GroupList extends TrackerReact(React.Component){
+export default class groupList extends TrackerReact(React.Component){
 
     getGroup(){
         let users = [];

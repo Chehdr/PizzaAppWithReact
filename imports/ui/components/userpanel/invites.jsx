@@ -3,7 +3,7 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import '../../../api/groups/groups.js';
 
-export default class InvitesForm extends TrackerReact(React.Component) {
+export default class invites extends TrackerReact(React.Component) {
 
     invites() {
         let data = [];

@@ -24,7 +24,7 @@ Meteor.methods({
   DeleteGroup: function() {
     Roles.removeUsersFromRoles( Meteor.userId(), 'admin');
     Roles.addUsersToRoles(Meteor.userId(), ['guest']);
-    let Group = Groups.findOne({'AdminGroup': Meteor.userId()});
+    const Group = Groups.findOne({'AdminGroup': Meteor.userId()});
     _.each(Group.users, function(id){ 
       Roles.removeUsersFromRoles( id, 'user');
       Roles.addUsersToRoles( id, 'guest');
@@ -54,5 +54,10 @@ Meteor.methods({
     Roles.removeUsersFromRoles( userId, 'user');
     Roles.addUsersToRoles(Meteor.userId(), ['guest']);
     Groups.update({'AdminGroup': Meteor.userId() }, { $pull: { 'users': userId } });
-  }
+  },  
+  LeaveGroup: function(){
+    Roles.removeUsersFromRoles( Meteor.userId(), 'user');
+    Roles.addUsersToRoles(Meteor.userId(), ['guest']);
+    Groups.update({}, { $pull: { 'users': Meteor.userId() } },{multi: true});
+  },
 });

@@ -1,7 +1,8 @@
 import styles from './style.css';
 import React, { Component} from 'react';
+import { Accounts, STATES } from 'meteor/std:accounts-ui';
 
-export default class LoginPage extends Component {
+export default class loginReg extends Component {
   render() {
     return (
       <div>

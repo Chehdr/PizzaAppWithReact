@@ -3,7 +3,7 @@ import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import '../../../api/groups/groups.js';
 
-export default class SendInviteForm extends TrackerReact(React.Component){
+export default class sendInvite extends TrackerReact(React.Component){
     getSelectedRowKeys() {
         let id = this.refs.table.state.selectedRowKeys;
 

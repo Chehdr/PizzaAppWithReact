@@ -2,7 +2,7 @@ import React, { Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import '../../../api/groups/groups.js';
 
-export default class CreateGroupForm extends Component {
+export default class createGroup extends Component {
     handleSubmit(e) {
         e.preventDefault();
         let name = this.refs.GroupName.value.trim();

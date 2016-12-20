@@ -1,42 +1,25 @@
 import React, { Component} from 'react';
 import { render } from 'react-dom';
 import { Accounts, STATES } from 'meteor/std:accounts-ui';
-import GuestPage from '../pages/guestpanel';
-import UserPage from '../pages/userpanel';
-import AdminPage from '../pages/adminpanel';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
-export default class PanelPage extends Component {
-    
-  render() {
-    return (
-      <div>
-        <div className="container">
-          <div className="panel panel-default">
-            <div className="panel-body"><Accounts.ui.LoginForm formState={STATES.PROFILE} /></div>
-            <div className="panel-footer"><PanelContainer /></div>
-          </div>
-        </div>
-    </div>
-      
-    );
-  }
-}
-class PanelContainer extends TrackerReact(React.Component) {
+export default class panel extends TrackerReact(React.Component) {
 
   constructor() {
     super();
     Meteor.subscribe('AllUsers');
   }
   Panel(){
-    let Role = Roles.getRolesForUser( Meteor.userId() )[0];
+    const Role = Roles.getRolesForUser( Meteor.userId() )[0];
     switch(Role){
-      case 'guest' : return <GuestPage />;
-      case 'admin' : return <AdminPage />;
-      case 'user' : return <UserPage />;
+      case 'guest' : browserHistory.push('/panel/guest');
+      case 'admin' : browserHistory.push('/panel/admin');
+      case 'user' : browserHistory.push('/panel/user');
+      case undefined : browserHistory.push('/panel/usersds');
     }
   }
   render() {
-  return <div> {this.Panel()} </div>
+    this.Panel()
   }
 };

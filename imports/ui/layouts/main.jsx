@@ -1,8 +1,9 @@
 import React, { Component} from 'react';
+import { browserHistory } from 'react-router'
 
-export default class MainLayout extends Component {
-  render() {
-    return (
+export default function main(props){
+
+    return (  
       <div>
         <div className="navbar navbar-default" role="navigation">
           <div className="navbar-header">
@@ -22,13 +23,17 @@ export default class MainLayout extends Component {
           </ul>
         </div>
         </div>
-       {this.props.children}
-    <footer className="navbar-default navbar-fixed-bottom">
-    <div className="container-fluid">
-      <span>Created by Farice</span>
-    </div>
-   </footer>
+          <div className="container">
+            <div className="panel panel-default">
+              <div className="panel-body"><Accounts.ui.LoginForm/></div>
+              <div className="panel-footer">{props.children}</div>
+            </div>
+          </div>
+          <footer className="navbar-default navbar-fixed-bottom">
+          <div className="container-fluid">
+            <span>Created by Farice</span>
+          </div>
+        </footer>
       </div>
     );
   }
-}

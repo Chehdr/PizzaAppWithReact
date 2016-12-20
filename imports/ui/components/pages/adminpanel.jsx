@@ -1,22 +1,19 @@
 import React, { Component} from 'react';
-import SendInvite from '../userpanel/sendInvite.jsx';
-import GroupList from '../userpanel/groupList.jsx';
+import { Router, Route, browserHistory } from 'react-router';
 import '../../../api/groups/groups.js';
 
-import { render } from 'react-dom';
+export default class adminPanel extends Component {
 
-export default class AdminPage extends Component {
-
- sendinviteform(e) {
+ sendInviteForm(e) {
     e.preventDefault();
-    render(<SendInvite/>, document.getElementById('RenderForm'));
+    browserHistory.push('/admin/sendinvite');
   }
-  grouplist(e) {
+  groupList(e) {
     e.preventDefault();
-    render(<GroupList/>, document.getElementById('RenderForm'));
+    browserHistory.push('/admin/grouplist');
   }
 
-  deletegroup(e) {
+  deleteGroup(e) {
       Meteor.call('DeleteGroup')
     }
 
@@ -28,18 +25,18 @@ export default class AdminPage extends Component {
           <div className="panel panel-default">
             <div className="panel-heading">Action with groups</div>          
               <div className="panel-body">
-                <a href="SendInviteToGroup" onClick={this.sendinviteform} className="btn btn-primary btn-block" role="button">Send Invite</a>
+                <a href="SendInviteToGroup" onClick={this.sendInviteForm} className="btn btn-primary btn-block" role="button">Send Invite</a>
               </div>
               <div className="panel-body">
-                <a href="GroupList"  onClick={this.grouplist}  className="btn btn-primary btn-block" role="button">Group List</a>
+                <a href="GroupList"  onClick={this.groupList}  className="btn btn-primary btn-block" role="button">Group List</a>
               </div>
               <div className="panel-footer">
-                <button type="button" onClick={this.deletegroup}  className="btn btn-danger btn-block">Delete Group</button>
+                <button type="button" onClick={this.deleteGroup}  className="btn btn-danger btn-block">Delete Group</button>
             </div>
           </div>
         </div>
         <div id='RenderForm' className="col-sm-8">
-
+          {this.props.children}
         </div>
       </div>
     </div>

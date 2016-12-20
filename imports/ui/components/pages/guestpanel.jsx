@@ -1,21 +1,18 @@
 import React, { Component} from 'react';
-import CreateGroup from '../userpanel/creategroup.jsx';
-import Invites from '../userpanel/invites.jsx';
-import { render } from 'react-dom';
+import { Router, Route, browserHistory } from 'react-router';
 
-export default class GuestPage extends Component {
+export default class guestPanel extends Component {
 
-  createform(e) {
+  createForm(e) {
     e.preventDefault();
-    render(<CreateGroup/>, document.getElementById('RenderForm'));
-
+    browserHistory.push('/guest/creategroup'); //не впевнений чи так можна створювати структуру проекту
   }
 
-  inviteform(e) {
+  inviteForm(e) {
     e.preventDefault();
-    render(<Invites/>, document.getElementById('RenderForm'));
-
+    browserHistory.push('/guest/invates');
   }
+
   render() {
     return (
     <div className="container">
@@ -24,15 +21,15 @@ export default class GuestPage extends Component {
           <div className="panel panel-default">
             <div className="panel-heading">Action with groups</div>          
             <div className="panel-body">
-              <a onClick={this.inviteform} href="InvatesToGroup" className="btn btn-primary btn-block" role="button">Invites</a>
+              <a onClick={this.inviteForm} href="InvatesToGroup" className="btn btn-primary btn-block" role="button">Invites</a>
             </div>
             <div className="panel-footer">
-              <a onClick={this.createform} className="btn btn-success btn-block" role="button">Create Group</a>
+              <a onClick={this.createForm} className="btn btn-success btn-block" role="button">Create Group</a>
             </div>
           </div>
         </div>
         <div id='RenderForm' className="col-sm-8">
-
+          {this.props.children}
         </div>
       </div>
     </div>
