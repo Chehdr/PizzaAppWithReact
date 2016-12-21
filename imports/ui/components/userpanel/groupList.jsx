@@ -8,7 +8,7 @@ export default class groupList extends TrackerReact(React.Component){
     getGroup(){
         let users = [];
         let data = [];
-        let sub = Meteor.subscribe('Groups');
+        const sub = Meteor.subscribe('Groups');
         Meteor.subscribe('AllUsers');
         if (sub.ready() ){
             users = Groups.findOne({AdminGroup: Meteor.userId()});   
@@ -18,7 +18,7 @@ export default class groupList extends TrackerReact(React.Component){
 
     }
     remove(){
-        let id = this.refs.list.state.selectedRowKeys;
+        const id = this.refs.list.state.selectedRowKeys;
         id.length > 0 ? Meteor.call('RemoveUserFromGroup', id[0]) : alert('error');
     }
 

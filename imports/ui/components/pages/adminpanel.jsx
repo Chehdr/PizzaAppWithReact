@@ -1,42 +1,57 @@
 import React, { Component} from 'react';
 import { Router, Route, browserHistory } from 'react-router';
 import '../../../api/groups/groups.js';
-
-export default class adminPanel extends Component {
+import TrackerReact from 'meteor/ultimatejs:tracker-react';
+export default class adminPanel extends TrackerReact(React.Component) {
 
  sendInviteForm(e) {
     e.preventDefault();
-    browserHistory.push('/admin/sendinvite');
+    browserHistory.push('/panel/admin/sendinvite');
   }
   groupList(e) {
     e.preventDefault();
-    browserHistory.push('/admin/grouplist');
+    browserHistory.push('/panel/admin/grouplist');
   }
-
+  Profile(e) {
+    e.preventDefault();
+    browserHistory.push('/loginReg');
+  }
   deleteGroup(e) {
-      Meteor.call('DeleteGroup')
+      Meteor.call('DeleteGroup');
+      browserHistory.push('/panel/guest');
     }
 
   render() {
     return (
-    <div className="container">
-      <div className="row">
+    <div>
+      <div className="panel-body">
+        <div className="col-sm-8"></div>
+        <div className="col-sm-2"></div>
         <div className="col-sm-2">
-          <div className="panel panel-default">
-            <div className="panel-heading">Action with groups</div>          
-              <div className="panel-body">
-                <a href="SendInviteToGroup" onClick={this.sendInviteForm} className="btn btn-primary btn-block" role="button">Send Invite</a>
+          <a href="GroupList"  onClick={ this.Profile }  className="btn btn-primary btn-block" role="button">Profile</a>
+        </div>
+      </div>
+      <div className="panel-footer">
+        <div className="container">
+          <div className="row">
+            <div className="col-sm-2">
+              <div className="panel panel-default">
+                <div className="panel-heading">Action with groups</div>          
+                  <div className="panel-body">
+                    <a href="SendInviteToGroup" onClick={this.sendInviteForm} className="btn btn-primary btn-block" role="button">Send Invite</a>
+                  </div>
+                  <div className="panel-body">
+                    <a href="GroupList"  onClick={this.groupList}  className="btn btn-primary btn-block" role="button">Group List</a>
+                  </div>
+                  <div className="panel-footer">
+                    <button type="button" onClick={this.deleteGroup}  className="btn btn-danger btn-block">Delete Group</button>
+                </div>
               </div>
-              <div className="panel-body">
-                <a href="GroupList"  onClick={this.groupList}  className="btn btn-primary btn-block" role="button">Group List</a>
-              </div>
-              <div className="panel-footer">
-                <button type="button" onClick={this.deleteGroup}  className="btn btn-danger btn-block">Delete Group</button>
+            </div>
+            <div id='RenderForm' className="col-sm-8">
+              {this.props.children}
             </div>
           </div>
-        </div>
-        <div id='RenderForm' className="col-sm-8">
-          {this.props.children}
         </div>
       </div>
     </div>

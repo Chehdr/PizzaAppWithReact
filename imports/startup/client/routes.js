@@ -10,6 +10,8 @@ import guestPage from '../../../imports/ui/components/pages/guestPanel';
 import createGroup from '../../../imports/ui/components/userpanel/createGroup.jsx';
 import invites from '../../../imports/ui/components/userpanel/invites.jsx';
 
+import authenticatedUser from '../../../imports/ui/components/pages/authenticatedUser.jsx';
+
 import adminPage from '../../../imports/ui/components/pages/adminPanel';
 import sendInvite from '../../../imports/ui/components/userpanel/sendInvite.jsx';
 import groupList from '../../../imports/ui/components/userpanel/groupList.jsx';
@@ -21,15 +23,17 @@ export const renderRoutes = () => (
       <Route path="/" component={ main }>
         <IndexRoute component={ indexPage } />
         <Route path="loginreg" component={ loginReg } />
-        <Route path="guest" component={ guestPage }>
-          <Route path="creategroup" component={ createGroup }/>
-          <Route path="invates" component={ invites }/>
-        </Route>
-          <Route path="admin" component={ adminPage }>
-            <Route path="sendinvite" component={ sendInvite }/>
-            <Route path="grouplist" component={ groupList }/>
+        <Route path="/panel" component={ authenticatedUser }>
+          <Route path="guest" component={ guestPage }>
+            <Route path="creategroup" component={ createGroup }/>
+            <Route path="invites" component={ invites }/>
           </Route>
-        <Route path="user" component={ userPage }/>
+          <Route path="admin" component={ adminPage }>
+             <Route path="sendinvite" component={ sendInvite }/>
+             <Route path="grouplist" component={ groupList }/>
+           </Route>
+          <Route path="user" component={ userPage }/>
+         </Route>
         </Route>
       <Route path="*" component={ notFoundPage } />
     </Router>

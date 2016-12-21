@@ -10,15 +10,21 @@ import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 export default class index extends TrackerReact(React.Component) {
 
   constructor() {
-    super();
-    Meteor.subscribe('AllUsers');
+  super();
+  const sub = Meteor.subscribe('AllUsers');
+  this.state = {
+      subscription: sub
+    }
   }
   Panel(){
-    const Role = Roles.getRolesForUser( Meteor.userId() )[0];
-    switch(Role){
-      case 'guest' : browserHistory.push('guest');
-      case 'admin' : browserHistory.push('admin');
-      case 'user' : return <UserPage />;
+    if (this.state.subscription.ready()){
+      const Role = Roles.getRolesForUser( Meteor.userId() )[0];
+      switch(Role){
+        case 'guest' : browserHistory.push('/panel/guest'); break
+        case 'admin' : browserHistory.push('/panel/admin'); break
+        case 'user' : browserHistory.push('/panel/user'); break
+        case undefined : browserHistory.push('/loginreg'); break
+      }
     }
   }
   render() {

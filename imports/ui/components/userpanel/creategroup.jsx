@@ -1,14 +1,18 @@
 import React, { Component} from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import '../../../api/groups/groups.js';
-
+import { Router, Route, browserHistory } from 'react-router';
 export default class createGroup extends Component {
     handleSubmit(e) {
         e.preventDefault();
-        let name = this.refs.GroupName.value.trim();
-        name ? Meteor.call('CreateGroup', name) : alert ('ewe');
+        const name = this.refs.GroupName.value.trim();
+        if (name){
+            Meteor.call('CreateGroup', name);
+            browserHistory.push('/panel/admin');
+        }else{
+            alert ('error');
+        }
            
-        
     }
 
   render() {

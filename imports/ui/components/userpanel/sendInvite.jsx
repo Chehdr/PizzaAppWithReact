@@ -5,7 +5,7 @@ import '../../../api/groups/groups.js';
 
 export default class sendInvite extends TrackerReact(React.Component){
     getSelectedRowKeys() {
-        let id = this.refs.table.state.selectedRowKeys;
+        const id = this.refs.table.state.selectedRowKeys;
 
         id.length > 0 ? Meteor.call('SendInvite', id[0]) : alert('error');
         
@@ -13,7 +13,7 @@ export default class sendInvite extends TrackerReact(React.Component){
     getUsers(){
         Meteor.subscribe('Groups');
         Meteor.subscribe('AllUsers');
-        let users = Groups.findOne({AdminGroup: Meteor.userId()}, {fields:{'invite':1}});
+        const users = Groups.findOne({AdminGroup: Meteor.userId()}, {fields:{'invite':1}});
         let sended = [];
         if(users){
             sended = _.pluck(users.invite, 'userId');

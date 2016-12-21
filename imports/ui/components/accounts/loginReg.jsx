@@ -21,8 +21,8 @@ export default class loginReg extends Component {
             </div>
           </div>
         </div>
+        <br/>
     </div>
-      
     );
   }
 }

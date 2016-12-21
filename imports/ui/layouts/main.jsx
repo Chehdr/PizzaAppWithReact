@@ -25,8 +25,7 @@ export default function main(props){
         </div>
           <div className="container">
             <div className="panel panel-default">
-              <div className="panel-body"><Accounts.ui.LoginForm/></div>
-              <div className="panel-footer">{props.children}</div>
+              {props.children}
             </div>
           </div>
           <footer className="navbar-default navbar-fixed-bottom">
