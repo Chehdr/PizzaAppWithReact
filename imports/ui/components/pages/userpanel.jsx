@@ -14,7 +14,10 @@ export default class userPanel extends Component {
     e.preventDefault();
     browserHistory.push('/loginReg');
   }
-
+  menu(e) {
+    e.preventDefault();
+    browserHistory.push('/panel/user/menu');
+  }
   render() {
     return (
       <div>
@@ -35,6 +38,20 @@ export default class userPanel extends Component {
                         </div>
                   </div>
                 </div>
+                <div id='RenderForm' className="col-sm-8">
+                  {this.props.children}
+                </div>
+                <div className="col-sm-2">
+              <div className="panel panel-default">
+                <div className="panel-heading">Action with menu</div>
+                  <div className="panel-body">
+                    <a href="Menu" onClick={this.menu} className="btn btn-primary btn-block" role="button">Menu</a>
+                  </div>
+                  <div className="panel-footer">
+                    <a href="Event" className="btn btn-success btn-block" role="button">Event</a>
+                  </div>
+                </div>
+              </div>
               </div>
             </div>
         </div>

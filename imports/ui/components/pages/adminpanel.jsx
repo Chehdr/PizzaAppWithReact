@@ -24,6 +24,10 @@ export default class adminPanel extends TrackerReact(React.Component) {
       Meteor.call('DeleteGroup');
       browserHistory.push('/panel/guest');
     }
+  coupons(e) {
+    e.preventDefault();
+    browserHistory.push('/panel/admin/coupons');
+  }
 
   render() {
     return (
@@ -61,7 +65,7 @@ export default class adminPanel extends TrackerReact(React.Component) {
                     <a href="Menu" onClick={this.menu} className="btn btn-primary btn-block" role="button">Menu</a>
                   </div>
                   <div className="panel-body">
-                    <a href="Coupons" className="btn btn-primary btn-block" role="button">Coupons</a>
+                    <a href="Coupons" onClick={this.coupons}  className="btn btn-primary btn-block" role="button">Coupons</a>
                   </div>
                   <div className="panel-footer">
                     <a href="Event" className="btn btn-success btn-block" role="button">Event</a>

@@ -16,6 +16,7 @@ import adminPage from '../../../imports/ui/components/pages/adminPanel';
 import sendInvite from '../../../imports/ui/components/userpanel/sendInvite.jsx';
 import menu from '../../../imports/ui/components/userpanel/menu.jsx';
 import groupList from '../../../imports/ui/components/userpanel/groupList.jsx';
+import coupons from '../../../imports/ui/components/userpanel/coupons.jsx';
 
 import userPage from '../../../imports/ui/components/pages/userPanel';
 
@@ -33,8 +34,11 @@ export const renderRoutes = () => (
              <Route path="sendinvite" component={ sendInvite }/>
              <Route path="grouplist" component={ groupList }/>
              <Route path="menu" component={ menu }/>
+             <Route path="coupons" component={ coupons }/>
            </Route>
-          <Route path="user" component={ userPage }/>
+          <Route path="user" component={ userPage }>
+            <Route path="menu" component={ menu }/>
+          </Route>
          </Route>
         </Route>
       <Route path="*" component={ notFoundPage } />
