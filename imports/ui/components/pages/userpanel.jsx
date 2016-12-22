@@ -20,7 +20,6 @@ export default class userPanel extends Component {
       <div>
         <div className="panel-body">
           <div className="col-sm-8"></div>
-          <div className="col-sm-2"></div>
           <div className="col-sm-2">
           <a href="GroupList"  onClick={ this.Profile }  className="btn btn-primary btn-block" role="button">Profile</a>
         </div>

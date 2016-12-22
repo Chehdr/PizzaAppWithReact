@@ -23,12 +23,10 @@ export default function main(props){
           </ul>
         </div>
         </div>
-          <div className="container">
-            <div className="panel panel-default">
-              {props.children}
-            </div>
-          </div>
-          <footer className="navbar-default navbar-fixed-bottom">
+        <div className="panel panel-default">
+          {props.children}
+        </div>
+        <footer className="navbar-default navbar-fixed-bottom">
           <div className="container-fluid">
             <span>Created by Farice</span>
           </div>

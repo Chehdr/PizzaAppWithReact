@@ -10,10 +10,11 @@ import guestPage from '../../../imports/ui/components/pages/guestPanel';
 import createGroup from '../../../imports/ui/components/userpanel/createGroup.jsx';
 import invites from '../../../imports/ui/components/userpanel/invites.jsx';
 
-import authenticatedUser from '../../../imports/ui/components/pages/authenticatedUser.jsx';
+import authenticatedUser from '../../../imports/ui/components/userpanel/authenticatedUser.jsx';
 
 import adminPage from '../../../imports/ui/components/pages/adminPanel';
 import sendInvite from '../../../imports/ui/components/userpanel/sendInvite.jsx';
+import menu from '../../../imports/ui/components/userpanel/menu.jsx';
 import groupList from '../../../imports/ui/components/userpanel/groupList.jsx';
 
 import userPage from '../../../imports/ui/components/pages/userPanel';
@@ -31,6 +32,7 @@ export const renderRoutes = () => (
           <Route path="admin" component={ adminPage }>
              <Route path="sendinvite" component={ sendInvite }/>
              <Route path="grouplist" component={ groupList }/>
+             <Route path="menu" component={ menu }/>
            </Route>
           <Route path="user" component={ userPage }/>
          </Route>

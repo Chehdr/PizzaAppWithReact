@@ -16,7 +16,7 @@ Meteor.methods({
       dateCreate: new Date(), 
       invite: [],
       users: [],
-      menu: {},
+      menu: [],
       coupons: []
     }
     Groups.insert( info );
@@ -59,5 +59,29 @@ Meteor.methods({
     Roles.removeUsersFromRoles( Meteor.userId(), 'user');
     Roles.addUsersToRoles(Meteor.userId(), ['guest']);
     Groups.update({}, { $pull: { 'users': Meteor.userId() } },{multi: true});
+  },  
+  GroupMenu: function(menu){
+    check( menu, { id: String, name: String, price: String }); 
+    if(Roles.userIsInRole(Meteor.userId(), 'admin')){
+      Groups.update({'AdminGroup': Meteor.userId()}, { $push: { 'menu': menu } });
+    }else{
+      Groups.update({ 'users': { $in: [Meteor.userId() ] }} , { $push: { 'menu': menu } });
+    }
   },
+  menuRowDelete: function(row){
+    check( row, String);
+    if(Roles.userIsInRole(Meteor.userId(), 'admin')){
+      Groups.update({'AdminGroup': Meteor.userId()}, { "$pull": { "menu": { "id": row } }});
+    }else{
+      Groups.update({ 'users': { $in: [Meteor.userId() ] }} , { "$pull": { "menu": { "id": row } }});
+    }
+  },
+  menuRowChange: function(row){
+    check( row, { id: String, name: String, price: String }); 
+    if(Roles.userIsInRole(Meteor.userId(), 'admin')){
+      Groups.update({'AdminGroup': Meteor.userId(), 'menu.id': row.id}, { "$set": { "menu.$": row }});
+    }else{
+      Groups.update({ 'users': { $in: [Meteor.userId() ] }, 'menu.id': row.id}, { "$set": { "menu.$": row }});
+    }
+  }
 });
