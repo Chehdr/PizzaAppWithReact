@@ -2,9 +2,11 @@ import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
 
 import '../groups.js';
+import '../../orders/orders.js';
+import '../../events/events.js';
 
 Meteor.methods({
-  CreateGroup: function (name) {
+  'group.createGroup': function (name) {
     check(name, String);
     Roles.removeUsersFromRoles(Meteor.userId(), 'guest');
     Roles.addUsersToRoles(Meteor.userId(), ['admin']);
@@ -21,46 +23,48 @@ Meteor.methods({
     }
     Groups.insert( info );
   },  
-  DeleteGroup: function() {
+  'group.deleteGroup': function() {
     Roles.removeUsersFromRoles( Meteor.userId(), 'admin');
     Roles.addUsersToRoles(Meteor.userId(), ['guest']);
-    const Group = Groups.findOne({'AdminGroup': Meteor.userId()});
-    _.each(Group.users, function(id){ 
+    const group = Groups.findOne({'AdminGroup': Meteor.userId()});
+    _.each(group.users, function(id){ 
       Roles.removeUsersFromRoles( id, 'user');
-      Roles.addUsersToRoles( id, 'guest');
-         
+      Roles.addUsersToRoles( id, 'guest');    
     });
-   Groups.remove({'_id': Group._id});
-   //Events.remove({'GroupId': Group._id});
-   //Orders.remove({'GroupId': Group._id});
+    Groups.remove({'_id': Group._id});
+    UserEvents.remove({'groupId': Group._id});
+    Orders.remove({'idGroup': Group._id});
   },
-    SendInvite: function(userId){
+  'group.sendInvite': function(userId){
     check(userId, String);
     Groups.update({ 'AdminGroup': Meteor.userId() }, { $push: { 'invite': {'userId': userId} } });
   },  
-    AcceptInviteToGroup: function(groupId){
+  'group.acceptInviteToGroup': function(groupId){
     check(groupId, String);
     Roles.removeUsersFromRoles( Meteor.userId(), 'guest');
     Roles.addUsersToRoles(Meteor.userId(), ['user']);
     Groups.update({'_id': groupId }, { $push: { 'users': Meteor.userId() } });
     Groups.update({invite:{userId:Meteor.userId()}}, { $pull: { "invite" : { userId: Meteor.userId()} } },{multi: true});
   },
-    DeclineInviteToGroup: function(groupId){
+  'group.declineInviteToGroup': function(groupId){
     check(groupId, String);
     Groups.update({'_id': groupId }, { $pull: { "invite" : { userId: Meteor.userId()} } }, false, true );
   },
-  RemoveUserFromGroup: function(userId){
+  'group.removeUserFromGroup': function(userId){
     check(userId, String);
     Roles.removeUsersFromRoles( userId, 'user');
     Roles.addUsersToRoles(Meteor.userId(), ['guest']);
     Groups.update({'AdminGroup': Meteor.userId() }, { $pull: { 'users': userId } });
   },  
-  LeaveGroup: function(){
-    Roles.removeUsersFromRoles( Meteor.userId(), 'user');
-    Roles.addUsersToRoles(Meteor.userId(), ['guest']);
+  'group.leaveGroup': function(){
     Groups.update({}, { $pull: { 'users': Meteor.userId() } },{multi: true});
+    const ifUserInGroups = Groups.findOne({ 'users': { $in: [Meteor.userId() ] }}); // якось так)
+    if (ifUserInGroups.lenght === 0){
+      Roles.removeUsersFromRoles( Meteor.userId(), 'user');
+      Roles.addUsersToRoles(Meteor.userId(), ['guest']);
+    }
   },  
-  GroupMenu: function(menu){
+  'group.insertMenu': function(menu){
     check( menu, { id: String, name: String, price: String, coupons: String }); 
     if(Roles.userIsInRole(Meteor.userId(), 'admin')){
       Groups.update({'AdminGroup': Meteor.userId()}, { $push: { 'menu': menu } });
@@ -68,7 +72,7 @@ Meteor.methods({
       Groups.update({ 'users': { $in: [Meteor.userId() ] }} , { $push: { 'menu': menu } });
     }
   },
-  menuRowDelete: function(row){
+  'group.menuRowDelete': function(row){
     check( row, String);
     if(Roles.userIsInRole(Meteor.userId(), 'admin')){
       Groups.update({'AdminGroup': Meteor.userId()}, { "$pull": { "menu": { "id": row } }});
@@ -76,7 +80,7 @@ Meteor.methods({
       Groups.update({ 'users': { $in: [Meteor.userId() ] }} , { "$pull": { "menu": { "id": row } }});
     }
   },
-  menuRowChange: function(row){
+  'group.menuRowChange': function(row){
     check( row, { id: String, name: String, price: String, coupons: String });  
     if(Roles.userIsInRole(Meteor.userId(), 'admin')){
       Groups.update({'AdminGroup': Meteor.userId(), 'menu.id': row.id}, { "$set": { "menu.$": row }});
@@ -84,8 +88,8 @@ Meteor.methods({
       Groups.update({ 'users': { $in: [Meteor.userId() ] }, 'menu.id': row.id}, { "$set": { "menu.$": row }});
     }
   },
-  addCoupon: function(row){
+  'group.addCoupon': function(row){
     check( row, { id: String, name: String, price: String, coupons: String });  
     Groups.update({'AdminGroup': Meteor.userId(), 'menu.id': row.id}, { "$set": { "menu.$": row }});
-    }
+  }
 });

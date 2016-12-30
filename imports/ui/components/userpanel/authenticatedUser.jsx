@@ -1,9 +1,8 @@
-import React, { Component} from 'react';
+import React from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
-import { Router, Route, IndexRoute, browserHistory } from 'react-router';
+import { browserHistory } from 'react-router';
 
-export default class authenticatedUser extends TrackerReact(React.Component){  
-
+export default class AuthenticatedUser extends TrackerReact(React.Component){  
   getMeteorData() {
     return {
       isAuthenticated: Meteor.userId() !== null
@@ -19,7 +18,6 @@ export default class authenticatedUser extends TrackerReact(React.Component){
       browserHistory.push('/loginreg');
     }
   }
-
   render() {
     return (
       <div>

@@ -1,46 +1,54 @@
 import React from 'react';
 import { Router, Route, IndexRoute, browserHistory } from 'react-router';
 
-import loginReg from '../../../imports/ui/components/accounts/loginReg.jsx';
-import main from '../../../imports/ui/layouts/main.jsx';
-import indexPage from '../../../imports/ui/components/index.jsx';
+import LoginReg from '../../../imports/ui/components/accounts/LoginReg.jsx';
+
+import main from '../../../imports/ui/layouts/main.jsx'; // правильно? Наскільки я зрозумів прості функції по принципу camelCase
+import index from '../../../imports/ui/components/index.jsx';
 import notFoundPage from '../../../imports/ui/components/errors/notFoundPage.jsx';
 
-import guestPage from '../../../imports/ui/components/pages/guestPanel';
-import createGroup from '../../../imports/ui/components/userpanel/createGroup.jsx';
-import invites from '../../../imports/ui/components/userpanel/invites.jsx';
+import GuestPage from '../../../imports/ui/components/pages/GuestPanel';
+import CreateGroup from '../../../imports/ui/components/userpanel/CreateGroup.jsx';
+import Invites from '../../../imports/ui/components/userpanel/Invites.jsx';
 
-import authenticatedUser from '../../../imports/ui/components/userpanel/authenticatedUser.jsx';
+import AuthenticatedUser from '../../../imports/ui/components/userpanel/AuthenticatedUser.jsx';
+import redirectToPanel from '../../../imports/ui/components/userpanel/redirectToPanel.jsx';
 
-import adminPage from '../../../imports/ui/components/pages/adminPanel';
-import sendInvite from '../../../imports/ui/components/userpanel/sendInvite.jsx';
-import menu from '../../../imports/ui/components/userpanel/menu.jsx';
-import groupList from '../../../imports/ui/components/userpanel/groupList.jsx';
-import coupons from '../../../imports/ui/components/userpanel/coupons.jsx';
+import AdminPage from '../../../imports/ui/components/pages/AdminPanel';
+import SendInvite from '../../../imports/ui/components/userpanel/SendInvite.jsx';
+import Menu from '../../../imports/ui/components/userpanel/Menu.jsx';
+import GroupList from '../../../imports/ui/components/userpanel/GroupList.jsx';
+import Coupons from '../../../imports/ui/components/userpanel/Coupons.jsx';
+import Events from '../../../imports/ui/components/userpanel/Events.jsx';
+import Order from '../../../imports/ui/components/userpanel/Order.jsx';
 
-import userPage from '../../../imports/ui/components/pages/userPanel';
+import UserPage from '../../../imports/ui/components/pages/UserPanel';
 
 export const renderRoutes = () => (
-    <Router history={ browserHistory }>
-      <Route path="/" component={ main }>
-        <IndexRoute component={ indexPage } />
-        <Route path="loginreg" component={ loginReg } />
-        <Route path="/panel" component={ authenticatedUser }>
-          <Route path="guest" component={ guestPage }>
-            <Route path="creategroup" component={ createGroup }/>
-            <Route path="invites" component={ invites }/>
-          </Route>
-          <Route path="admin" component={ adminPage }>
-             <Route path="sendinvite" component={ sendInvite }/>
-             <Route path="grouplist" component={ groupList }/>
-             <Route path="menu" component={ menu }/>
-             <Route path="coupons" component={ coupons }/>
-           </Route>
-          <Route path="user" component={ userPage }>
-            <Route path="menu" component={ menu }/>
-          </Route>
-         </Route>
+  <Router history={ browserHistory }>
+    <Route path="/" component={ main }  >
+      <IndexRoute component={ index } onEnter={ redirectToPanel }/>
+      <Route path="loginreg" component={ LoginReg } />
+      <Route path="/panel" component={ AuthenticatedUser } >
+        <Route path="guest" component={ GuestPage }>
+          <Route path="creategroup" component={ CreateGroup }/>
+          <Route path="invites" component={ Invites }/>
         </Route>
-      <Route path="*" component={ notFoundPage } />
-    </Router>
+        <Route path="admin" component={ AdminPage }>
+          <Route path="sendinvite" component={ SendInvite }/>
+          <Route path="grouplist" component={ GroupList }/>
+          <Route path="menu" component={ Menu }/>
+          <Route path="coupons" component={ Coupons }/>
+          <Route path="events" component={ Events }/>
+          <Route path="/order/:id" component={ Order }/>
+        </Route>
+        <Route path="user" component={ UserPage }>
+          <Route path="menu" component={ Menu }/>
+          <Route path="events" component={ Events }/>
+          <Route path="/order/:id" component={ Order }/>
+        </Route>
+      </Route>
+    </Route>
+    <Route path="*" component={ notFoundPage } />
+  </Router>
 );

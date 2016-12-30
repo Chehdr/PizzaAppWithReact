@@ -1,28 +1,40 @@
 import styles from './style.css';
-import React, { Component} from 'react';
-import { Accounts, STATES } from 'meteor/std:accounts-ui';
+import React from 'react';
+import { Accounts } from 'meteor/std:accounts-ui';
+import TrackerReact from 'meteor/ultimatejs:tracker-react';
+import { Link } from 'react-router';
 
-export default class loginReg extends Component {
+export default class LoginReg extends TrackerReact(React.Component) {
   render() {
     return (
       <div>
         <div className="container">
           <center>
 		        <h2>Login / Registration</h2>
-	         </center>
+	        </center>
         </div>
         <br/>
         <div className="container">
           <div className="row">
             <div className="EditForm col-md-4 col-md-offset-4">
               <div className="form-body">
+                <div className="row">
+                  <div className="col-sm-3"></div>
+                    <div className="col-sm-6">
+                      { Meteor.userId()? 
+                        <div><Link to="/" className="btn btn-primary btn-block" role="button">Panel</Link></div>: 
+                        <div>Please login or register</div> }
+                    </div>
+                    <div className="col-sm-3"></div>
+                  </div>
+                  <br/>
                 <Accounts.ui.LoginForm/>
               </div>
             </div>
           </div>
         </div>
         <br/>
-    </div>
+      </div>
     );
   }
 }
