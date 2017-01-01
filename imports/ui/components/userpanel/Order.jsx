@@ -9,10 +9,14 @@ import '../../../api/orders/orders.js';
 export default class Order extends TrackerReact(React.Component) { 
   send(row, isSelected){
     const id = this.eventId;
-    if (isSelected){
+    if('count' in row && isSelected){
+      row.count = Number(row.count);
       Meteor.call('order.insertOrder', row, id)
+    }else if (!isSelected){
+        Meteor.call('order.deleteRow', row.id, id)
     }else{
-      Meteor.call('order.deleteRow', row.id, id)
+      alert('Enter count');
+      return false
     }
   }
   order() {
@@ -21,7 +25,7 @@ export default class Order extends TrackerReact(React.Component) {
     const sub2 = Meteor.subscribe('Orders');
     if (sub1.ready() && sub2.ready()){
       const order = Orders.findOne({idUser : Meteor.userId(), idEvent : this.props.routeParams.id});
-      if(order){
+      if(order && order.confirm){
         data = order.order
       }else {
         if(Roles.userIsInRole(Meteor.userId(), 'admin')){
@@ -32,6 +36,13 @@ export default class Order extends TrackerReact(React.Component) {
       }
     }
     return data
+  }
+  confirm(){
+    if(this.refs.table.state.selectedRowKeys.length > 0){
+      Meteor.call('order.confirm', this.props.params.id)
+    }else{
+      alert('Select Items!');
+    }
   }
   render() {
     const conf = {
@@ -55,11 +66,12 @@ export default class Order extends TrackerReact(React.Component) {
         cellEdit={ conf.cellEdit }>
           <TableHeaderColumn dataField='id' isKey={ true } autoValue hidden>Product ID</TableHeaderColumn>
           <TableHeaderColumn dataField='name' editable={ false }>Name Item</TableHeaderColumn>
-          <TableHeaderColumn dataField='coupons' editable={ false }>Price, $</TableHeaderColumn>
+          <TableHeaderColumn dataField='price' editable={ false }>Price, $</TableHeaderColumn>
           <TableHeaderColumn dataField='count' editable={ true }>Count</TableHeaderColumn>
         </BootstrapTable>
         <div className="container">
           <Link to="/" className="btn btn-default" role="button">Back</Link>
+          <button type="button" className="btn btn-default" onClick={this.confirm.bind(this)}>Confirm</button>
         </div>
         <br/>
       </div>

@@ -14,12 +14,15 @@ export default class Menu extends TrackerReact(React.Component) {
     return data
   }
   onAddRow(row) {
-    Meteor.call('group.groupMenu', row);
+    row.price = Number(row.price);
+    row.coupons = 0;
+    Meteor.call('group.insertMenu', row);
   }
   onDeleteRow(row) {
     Meteor.call('group.menuRowDelete', row[0]);
   }
   onAfterSaveCell(row) {
+    row.price = Number(row.price);
     Meteor.call('group.menuRowChange', row);
   }
   render() {

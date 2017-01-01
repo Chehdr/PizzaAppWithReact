@@ -28,7 +28,7 @@ export default class Events extends TrackerReact(React.Component) {
     if(id.length > 0){
       let status = UserEvents.findOne({'_id': id[0]}).status;
       switch(status){
-        case 'ordering' :  status = 'ordered'; break	//Meteor.call('SendOrder', idEvent);  break 
+        case 'ordering' :  status = 'ordered';	Meteor.call('order.sendOrder', id[0]);  break 
         case 'ordered' : status = 'delivering'; break
         case 'delivering' : status = 'delivered'; break
       }
@@ -59,7 +59,7 @@ export default class Events extends TrackerReact(React.Component) {
   }
   userIsAdmin(){
     const buttons = {};
-    if (this.state){
+    if (this.state && this.state.event[0]){
       if(this.state.event[0].createUser === Meteor.userId()){
         buttons.user = (
           <div>
@@ -83,6 +83,7 @@ export default class Events extends TrackerReact(React.Component) {
       }
       return buttons.user
     }
+    return 'Please create event'
   }
   addEvent(add){
     add.idGroup = Groups.findOne({'AdminGroup': Meteor.userId()})._id;

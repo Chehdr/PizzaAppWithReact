@@ -14,6 +14,7 @@ export default class Coupons extends TrackerReact(React.Component) {
     return data
   }
   onAfterSaveCell(row) {
+    row.coupons = Number(row.coupons);
     Meteor.call('group.addCoupon', row);
   }
   render() {
