@@ -1,5 +1,8 @@
 import { Meteor } from 'meteor/meteor';
 import { check } from 'meteor/check';
+import { Email } from 'meteor/email';
+
+import emailTemplate from './emailTemplate.js';
 
 import '../orders.js';
 import '../../groups/groups.js';
@@ -33,8 +36,10 @@ Meteor.methods({
     check(id, String);
     Orders.update({idUser : Meteor.userId(), idEvent : eventId}, { "$pull": { order: { id: id } }});
   },
-  'order.sendOrder': function(idEvent, idGroup){
-   const allOrders = Orders.aggregate([
+  'order.sendOrder': function(idEvent){
+    const users = UserEvents.findOne({_id: idEvent});
+    const adminEventEmail = Meteor.user( {id: users.createUser  } ).name;
+    const allOrders = Orders.aggregate([
       { $match: {idEvent: idEvent, confirm: true}},         
       { "$unwind": "$order" },        
        { "$group": {            
@@ -53,12 +58,18 @@ Meteor.methods({
       },
       { $project: { 
         newPrice: "$newPrice",
-        count: "$totalqty",
+        count: "$count",
         coupons: "$coupons",
         summ: { $multiply: [ "$newPrice",  "$count"] },
         } 
       }  
       ]);
-    console.log(allOrders);
-  }  
+    const options = {
+      from: 'PizzaDayRobot@gmail.com',
+      to: adminEventEmail,
+      subject: 'Hello from Pizza Day!',
+      html: emailTemplate(allOrders)
+    }
+    Email.send(options);
+  } //Можна продовжувати робити через aggregate? чи порадите щось інше?
 });

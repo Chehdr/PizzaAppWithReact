@@ -31,6 +31,7 @@ export default class Events extends TrackerReact(React.Component) {
         case 'ordering' :  status = 'ordered';	Meteor.call('order.sendOrder', id[0]);  break 
         case 'ordered' : status = 'delivering'; break
         case 'delivering' : status = 'delivered'; break
+        case 'delivered' : status = 'ordering'; break
       }
       Meteor.call('event.changeStatus', id[0], status);
     }else{
