@@ -1,4 +1,5 @@
 import { Meteor } from 'meteor/meteor';
+import { Groups } from '../Groups.js';
 
 Meteor.publish("Groups", function () {
   return Groups.find({});

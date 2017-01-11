@@ -2,23 +2,21 @@ import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
-import '../../../api/groups/groups.js';
+import { Groups } from '../../../api/groups/Groups.js';
+
 
 export default class GroupList extends TrackerReact(React.Component){
   getGroup(){
-    let users = [];
-    let data = [];
-    const sub1 = Meteor.subscribe('Groups');
-    const sub2 = Meteor.subscribe('AllUsers');
-      if (sub1.ready() && sub2.ready()){
-        users = Groups.findOne({AdminGroup: Meteor.userId()});   
-        data = Meteor.users.find( { _id : { $in : users.users} } ).fetch();
-      }
-    return data
+    const [sub1, sub2] = [ Meteor.subscribe('Groups'), Meteor.subscribe('AllUsers') ];
+    if (sub1.ready() && sub2.ready()){
+      const users = Groups.findOne({AdminGroup: Meteor.userId()});   
+      return Meteor.users.find( { _id : { $in : users.users } } ).fetch();
+    }
+    return []
   }
   remove(){
     const id = this.refs.list.state.selectedRowKeys;
-    id.length > 0 ? Meteor.call('group.removeUserFromGroup', id[0]) : alert('error');
+    id.length > 0 ? Meteor.call('Groups.removeUserFromGroup', id[0]) : alert('error');
   }
   render() {
     return (

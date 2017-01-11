@@ -2,12 +2,12 @@ import React from 'react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 
-import '../../../api/groups/groups.js';
+import { Groups } from '../../../api/groups/Groups.js';
 
 export default class SendInvite extends TrackerReact(React.Component){
   getSelectedRowKeys() {
     const id = this.refs.table.state.selectedRowKeys;
-    id.length > 0 ? Meteor.call('group.sendInvite', id[0]) : alert('error');  
+    id.length > 0 ? Meteor.call('Groups.sendInvite', id[0]) : alert('error');  
   }
   getUsers(){
     Meteor.subscribe('Groups');

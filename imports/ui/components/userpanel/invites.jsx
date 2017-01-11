@@ -3,29 +3,33 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { browserHistory } from 'react-router';
 
-import '../../../api/groups/groups.js';
+import { Groups } from '../../../api/groups/Groups.js';
 
 export default class Invites extends TrackerReact(React.Component) {
   invites() {
-    let data = [];
     const sub = Meteor.subscribe('Groups');
     if (sub.ready() ){
-      data = Groups.find({invite:{'userId': Meteor.userId()}}).fetch();  
+      return Groups.find({invite:{'userId': Meteor.userId()}}).fetch();  
     }
-    return data
+    return []
   }
   accept (){
     const id = this.refs.table.state.selectedRowKeys;
     if(id.length > 0){
-      Meteor.call('group.acceptInviteToGroup', id[0]);
-      browserHistory.push('/panel/user');
+      Meteor.call('Groups.acceptInviteToGroup', id[0], function(error, result) {
+        if(error){
+          alert('Error');
+        }else{
+          browserHistory.push('/panel/user');
+        }
+      });
     }else{
       alert('error');
     }
   }
   decline (){
     const id = this.refs.table.state.selectedRowKeys;
-    id.length > 0 ? Meteor.call('group.declineInviteToGroup', id[0]) : alert('error');
+    id.length > 0 ? Meteor.call('Groups.declineInviteToGroup', id[0]) : alert('error');
   }
   render() {
     return (

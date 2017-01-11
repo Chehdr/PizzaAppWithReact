@@ -1,11 +1,17 @@
 import React, { Component} from 'react';
 import { Link, browserHistory  } from 'react-router';
-import '../../../api/groups/groups.js';
+
+import { Groups } from '../../../api/groups/Groups.js';
 
 export default class AdminPanel extends Component {
   deleteGroup(event) {
-    Meteor.call('group.deleteGroup');
-    browserHistory.push('/panel/guest');
+    Meteor.call('Groups.deleteGroup', function(error, result) {
+      if(error){
+        alert('Error');
+      }else{
+        browserHistory.push('/panel/guest');
+      }
+    });
   }
   render() {
     return (

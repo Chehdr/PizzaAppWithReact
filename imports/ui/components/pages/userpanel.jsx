@@ -1,10 +1,17 @@
 import React, { Component} from 'react';
 import { Link, browserHistory  } from 'react-router';
 
+import { Groups } from '../../../api/groups/Groups.js';
+
 export default class UserPanel extends Component {
   leavegroup(event) {
-    Meteor.call('group.leaveGroup')
-    browserHistory.push('/panel/guest')
+    Meteor.call('Groups.leaveGroup', function(error, result) {
+      if(error){
+        alert('Error');
+      }else{
+        browserHistory.push('/panel/guest');
+      }
+    });    
   }
   render() {
     return (

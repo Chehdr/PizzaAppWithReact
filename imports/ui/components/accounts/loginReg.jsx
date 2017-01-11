@@ -28,7 +28,8 @@ export default class LoginReg extends TrackerReact(React.Component) {
                     <div className="col-sm-3"></div>
                   </div>
                   <br/>
-                <Accounts.ui.LoginForm/>
+                <Accounts.ui.LoginForm/> {/* Так ця форма відображається завжди, оскільки зареєстрований користувач бачить деталі профілю і кнопку виходу,
+                    а не зареєстрований - форму реєстрації. Якщо я правильно зрозумів запитання... */}
               </div>
             </div>
           </div>

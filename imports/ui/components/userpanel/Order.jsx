@@ -3,43 +3,41 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { Link } from 'react-router';
 
-import '../../../api/groups/groups.js';
-import '../../../api/orders/orders.js';
+import { Groups } from '../../../api/groups/Groups.js';
+import { Orders } from '../../../api/orders/Orders.js';
 
 export default class Order extends TrackerReact(React.Component) { 
   send(row, isSelected){
     const id = this.eventId;
     if('count' in row && isSelected){
-      row.count = Number(row.count);
-      Meteor.call('order.insertOrder', row, id)
+      row.count = parseInt(row.count);
+      Meteor.call('Order.insertOrder', row, id)
     }else if (!isSelected){
-        Meteor.call('order.deleteRow', row.id, id)
+      Meteor.call('Order.deleteRow', row.id, id)
     }else{
       alert('Enter count');
       return false
     }
   }
   order() {
-    let data = [];
-    const sub1 = Meteor.subscribe('Groups');
-    const sub2 = Meteor.subscribe('Orders');
+    const [sub1, sub2] = [ Meteor.subscribe('Groups'), Meteor.subscribe('Orders') ];
     if (sub1.ready() && sub2.ready()){
       const order = Orders.findOne({idUser : Meteor.userId(), idEvent : this.props.routeParams.id});
       if(order && order.confirm){
-        data = order.order
+        return order.order
       }else {
         if(Roles.userIsInRole(Meteor.userId(), 'admin')){
           return Groups.findOne({'AdminGroup': Meteor.userId()}).menu;
         }else{
-          return Groups.findOne( { 'users': { $in: [Meteor.userId() ] } } ).menu;
+          return Groups.findOne( { 'users': Meteor.userId() } ).menu;
         }
       }
     }
-    return data
+    return []
   }
   confirm(){
     if(this.refs.table.state.selectedRowKeys.length > 0){
-      Meteor.call('order.confirm', this.props.params.id)
+      Meteor.call('Order.confirm', this.props.params.id)
     }else{
       alert('Select Items!');
     }

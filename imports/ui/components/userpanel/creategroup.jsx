@@ -1,15 +1,20 @@
 import React, { Component} from 'react';
 import { browserHistory } from 'react-router';
 
-import '../../../api/groups/groups.js';
+import { Groups } from '../../../api/groups/Groups.js';
 
 export default class CreateGroup extends Component {
   submit(event) {
-    e.preventDefault();
+    event.preventDefault();
     const name = this.refs.GroupName.value.trim();
     if (name){
-      Meteor.call('group.createGroup', name);
-      browserHistory.push('/panel/admin');
+      Meteor.call('Groups.createGroup', name, function(error, result) {
+        if(error){
+          alert('Error');
+        }else{
+          browserHistory.push('/panel/admin');
+        }
+      });
     }else{
       alert ('error');
     }         

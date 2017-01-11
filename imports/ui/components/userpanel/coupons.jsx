@@ -2,20 +2,19 @@ import React from 'react';
 import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 
-import '../../../api/groups/groups.js';
+import { Groups } from '../../../api/groups/Groups.js';
 
 export default class Coupons extends TrackerReact(React.Component) {
   coupons() {
-    let data = [];
     const sub = Meteor.subscribe('Groups');
     if (sub.ready() ){
-      data = Groups.findOne({'AdminGroup': Meteor.userId()}).menu;  
+      return Groups.findOne({'AdminGroup': Meteor.userId()}).menu;  
     }
-    return data
+    return []
   }
   onAfterSaveCell(row) {
-    row.coupons = Number(row.coupons);
-    Meteor.call('group.addCoupon', row);
+    row.coupons = parseInt(row.coupons);
+    Meteor.call('Groups.addCoupon', row);
   }
   render() {
     const conf = {

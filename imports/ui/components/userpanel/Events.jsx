@@ -3,14 +3,15 @@ import TrackerReact from 'meteor/ultimatejs:tracker-react';
 import { BootstrapTable, TableHeaderColumn } from 'react-bootstrap-table';
 import { browserHistory } from 'react-router';
 
-import '../../../api/groups/groups.js';
-import '../../../api/events/events.js';
+import { Groups } from '../../../api/groups/Groups.js';
+import { UserEvents } from '../../../api/events/UserEvents.js';
+import { Orders } from '../../../api/orders/Orders';
 
 export default class Events extends TrackerReact(React.Component) {
   join() {
     const id = this.refs.table.state.selectedRowKeys;
     if(id.length > 0){
-      Meteor.call('event.joinToEvent', id[0]);
+      Meteor.call('Event.joinToEvent', id[0]);
     }else{
       alert('error');
     }
@@ -18,7 +19,7 @@ export default class Events extends TrackerReact(React.Component) {
   order (){
     const id = this.refs.table.state.selectedRowKeys;
     if(id.length > 0){
-      browserHistory.push('order/'+id);
+      browserHistory.push('order/' + id);
     }else{
       alert('error');
     }
@@ -26,21 +27,13 @@ export default class Events extends TrackerReact(React.Component) {
   nextStatus (event){
     const id = this.refs.table.state.selectedRowKeys;
     if(id.length > 0){
-      let status = UserEvents.findOne({'_id': id[0]}).status;
-      switch(status){
-        case 'ordering' :  status = 'ordered';	Meteor.call('order.sendOrder', id[0]);  break 
-        case 'ordered' : status = 'delivering'; break
-        case 'delivering' : status = 'delivered'; break
-        case 'delivered' : status = 'ordering'; break
-      }
-      Meteor.call('event.changeStatus', id[0], status);
+      Meteor.call('Event.checkOrders', id[0]);
     }else{
       alert('error');
     }
   }
   events() {
-    const sub1 = Meteor.subscribe('Groups');
-    const sub2 = Meteor.subscribe('UserEvents');  
+    const [sub1, sub2] = [ Meteor.subscribe('Groups'), Meteor.subscribe('UserEvents') ];
     if (sub1.ready() && sub2.ready()){
      	if(Roles.userIsInRole(Meteor.userId(), 'admin')){
         this.state = {
@@ -48,7 +41,7 @@ export default class Events extends TrackerReact(React.Component) {
         }
       }else{
         this.state = {
-          group: Groups.findOne( { 'users': { $in: [Meteor.userId() ] } } ),
+          group: Groups.findOne( { 'users': Meteor.userId() } ),
         }
       }
       this.state = {
@@ -58,11 +51,10 @@ export default class Events extends TrackerReact(React.Component) {
     }
     return []
   }
-  userIsAdmin(){
-    const buttons = {};
+  usersButtons(){
     if (this.state && this.state.event[0]){
       if(this.state.event[0].createUser === Meteor.userId()){
-        buttons.user = (
+        return (
           <div>
             <button type="button" className="btn btn-default" onClick={this.order.bind(this)}>Order in Event</button>
             <button type="button" className="btn btn-default" onClick={this.resetEvent.bind(this)}>Reset</button>
@@ -70,33 +62,32 @@ export default class Events extends TrackerReact(React.Component) {
           </div>
         )
       }else if (this.state.event[0].accepts.indexOf(Meteor.userId()) >= 0){
-        buttons.user = ( 
+        return ( 
           <div>
             <button type="button" className="btn btn-default" onClick={this.order.bind(this)}>Order in Event</button>
           </div>
         )
       }else{
-        buttons.user = (
+        return (
           <div>
             <button type="button" className="btn btn-default" onClick={this.join.bind(this)}>Join to Event</button>
           </div>
         )
       }
-      return buttons.user
     }
     return 'Please create event'
   }
   addEvent(add){
     add.idGroup = Groups.findOne({'AdminGroup': Meteor.userId()})._id;
-    Meteor.call('event.createEvent', add);
+    Meteor.call('Event.createEvent', add);
   }
   deleteEvent(row){
-    Meteor.call('event.removeEvent', row[0]);
+    Meteor.call('Event.removeEvent', row[0]);
   }
   resetEvent(event){
     const id = this.refs.table.state.selectedRowKeys;
     if(id.length > 0){
-      Meteor.call('event.resetEvent', id[0]);
+      Meteor.call('Event.resetEvent', id[0]);
     }else{
       alert('error');
     }
@@ -128,7 +119,7 @@ export default class Events extends TrackerReact(React.Component) {
           <TableHeaderColumn dataField='status' hiddenOnInsert editable={ false }>Status</TableHeaderColumn>
         </BootstrapTable>
         <div className="container">
-          { this.userIsAdmin(this) }
+          { this.usersButtons(this) }
         </div>   
         <br/>
       </div>

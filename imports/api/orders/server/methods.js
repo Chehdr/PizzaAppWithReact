@@ -4,21 +4,22 @@ import { Email } from 'meteor/email';
 
 import emailTemplate from './emailTemplate.js';
 
-import '../orders.js';
-import '../../groups/groups.js';
-import '../../events/events.js';
+import { UserEvents } from '../../events/UserEvents.js';
+import { Orders } from '../Orders.js';
+import { Groups } from '../../groups/Groups.js';
+
 
 Meteor.methods({
-  'order.insertOrder': function(row, eventId){
+  'Order.insertOrder': function(row, eventId){
     check( row, { id: String, name: String, price: Number, coupons: Number, count: Number });  
     check(eventId, String);
-    const ifOrder = Orders.findOne({idUser: Meteor.userId()});
+    const userOrder = Orders.findOne({idUser: Meteor.userId(), idEvent: eventId});
     const idGroup = UserEvents.findOne( { '_id': eventId}).groupId;
-    if(ifOrder){
+    if(userOrder){
       Orders.update({idUser : Meteor.userId(), idEvent : eventId}, { "$push": { order: row }});
     }else{
       const order = {
-        idGroup: idGroup,
+        idGroup, // я правильно зрозумів?
         confirm: false,
         idUser: Meteor.userId(),
         idEvent: eventId,
@@ -27,49 +28,36 @@ Meteor.methods({
       Orders.insert( order );  
     }
   },
-   'order.confirm': function(eventId){
+   'Order.confirm': function(eventId){
      check(eventId, String);
      Orders.update({idUser : Meteor.userId(), idEvent : eventId}, { "$set": { confirm: true }});
    },
-  'order.deleteRow': function(id, eventId){
+  'Order.deleteRow': function(id, eventId){
     check(eventId, String);
     check(id, String);
     Orders.update({idUser : Meteor.userId(), idEvent : eventId}, { "$pull": { order: { id: id } }});
   },
-  'order.sendOrder': function(idEvent){
+  'Order.sendOrder': function(idEvent){
     const users = UserEvents.findOne({_id: idEvent});
     const adminEventEmail = Meteor.user( {id: users.createUser  } ).name;
-    const allOrders = Orders.aggregate([
-      { $match: {idEvent: idEvent, confirm: true}},         
-      { "$unwind": "$order" },        
-       { "$group": {            
-         "_id": "$order.name",           
-         "name": { "$first": "$order.name" },           
-         "price": { "$first": "$order.price" },
-         "coupons": { "$first": "$order.coupons" },             
-         "totalqty": { "$sum": "$order.count" }         
+    const allOrders = Orders.find({idEvent: idEvent, confirm: true})
+      .map( function(order) {
+        const userEmail = Meteor.users.findOne({_id: order.idUser  }).name; //По одному повідомленню користувачам
+        const options = {
+          from: 'PizzaDayRobot@gmail.com',
+          to: userEmail,
+          subject: 'Hello from Pizza Day!',
+          html: emailTemplate(order.order)
         }
-       },
-      { $project: { 
-        newPrice: { $multiply: [ { $divide: [  { $subtract: ["$totalqty", "$coupons"] }, "$totalqty" ] },  '$price'] },
-        coupons: "$coupons",
-        count: "$totalqty",
-        } 
-      },
-      { $project: { 
-        newPrice: "$newPrice",
-        count: "$count",
-        coupons: "$coupons",
-        summ: { $multiply: [ "$newPrice",  "$count"] },
-        } 
-      }  
-      ]);
+        Email.send(options);
+        return order.order 
+      })
     const options = {
       from: 'PizzaDayRobot@gmail.com',
       to: adminEventEmail,
       subject: 'Hello from Pizza Day!',
       html: emailTemplate(allOrders)
     }
-    Email.send(options);
-  } //Можна продовжувати робити через aggregate? чи порадите щось інше?
+    Email.send(options); //І ще одне адміну з усіма замовленнями
+  } 
 });
