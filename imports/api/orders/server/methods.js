@@ -40,24 +40,20 @@ Meteor.methods({
   'Order.sendOrder': function(idEvent){
     const users = UserEvents.findOne({_id: idEvent});
     const adminEventEmail = Meteor.user( {id: users.createUser  } ).name;
+    const options = {
+      from: 'PizzaDayRobot@gmail.com',
+      subject: 'Hello from Pizza Day!',
+    }
     const allOrders = Orders.find({idEvent: idEvent, confirm: true})
       .map( function(order) {
         const userEmail = Meteor.users.findOne({_id: order.idUser  }).name; //По одному повідомленню користувачам
-        const options = {
-          from: 'PizzaDayRobot@gmail.com',
-          to: userEmail,
-          subject: 'Hello from Pizza Day!',
-          html: emailTemplate(order.order)
-        }
+        options.to = userEmail;
+        options.html = emailTemplate(order.order);
         Email.send(options);
         return order.order 
       })
-    const options = {
-      from: 'PizzaDayRobot@gmail.com',
-      to: adminEventEmail,
-      subject: 'Hello from Pizza Day!',
-      html: emailTemplate(allOrders)
-    }
+      options.to = adminEventEmail;
+      options.html = emailTemplate(allOrders);
     Email.send(options); //І ще одне адміну з усіма замовленнями
   } 
 });
