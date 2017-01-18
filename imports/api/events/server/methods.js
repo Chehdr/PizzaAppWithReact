@@ -36,15 +36,15 @@ Meteor.methods({
     Orders.remove({'idEvent': idEvent});
     UserEvents.update({'_id': idEvent}, {$set: {'status': 'ordering'}});
   },
-  'Event.checkOrders': function(idEvent){
+  'Event.checkStatus': function(idEvent){
     check(idEvent, String);
-    let status = UserEvents.findOne({'_id': idEvent}).status;
-    switch(status){
-      case 'ordering' :  status = 'ordered';	Meteor.call('Order.sendOrder', idEvent);  break 
-      case 'ordered' : status = 'delivering'; break
-      case 'delivering' : status = 'delivered'; break
-      case 'delivered' : status = 'ordering'; break
+    const allStatus = ['ordering', 'ordered', 'delivering', 'delivered'];
+    const status = UserEvents.findOne({'_id': idEvent}).status;
+    let index = allStatus.indexOf(status);
+    if(allStatus[0] === status){
+      Meteor.call('Order.sendOrder', idEvent);
     }
-    Meteor.call('Event.changeStatus', idEvent, status);
+    if(index < 3){index++}
+    Meteor.call('Event.changeStatus', idEvent, allStatus[index]);
   }
 });

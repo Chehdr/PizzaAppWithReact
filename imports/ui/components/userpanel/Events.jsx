@@ -27,7 +27,7 @@ export default class Events extends TrackerReact(React.Component) {
   nextStatus (event){
     const id = this.refs.table.state.selectedRowKeys;
     if(id.length > 0){
-      Meteor.call('Event.checkOrders', id[0]);
+      Meteor.call('Event.checkStatus', id[0]);
     }else{
       alert('error');
     }
