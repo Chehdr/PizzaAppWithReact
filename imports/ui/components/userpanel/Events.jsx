@@ -41,13 +41,11 @@ export default class Events extends TrackerReact(React.Component) {
     if (sub1.ready() && sub2.ready()){
      	if(Roles.userIsInRole(Meteor.userId(), 'admin')){
         this.state = {
-          group: Groups.findOne({'AdminGroup': Meteor.userId()}),
-          user: 'admin'
+          group: Groups.findOne({'AdminGroup': Meteor.userId()})
         }
       }else{
         this.state = {
-          group: Groups.findOne( { 'users': Meteor.userId() } ),
-          user: 'user'
+          group: Groups.findOne( { 'users': Meteor.userId() } )
         }
       }
       this.state = {
