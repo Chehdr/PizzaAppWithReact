@@ -40,12 +40,12 @@ export const renderRoutes = () => (
           <Route path="menu" component={ Menu }/>
           <Route path="coupons" component={ Coupons }/>
           <Route path="events" component={ Events }/>
-          <Route path="/order/:id" component={ Order }/>
+          <Route path="order/:id" component={ Order }/>
         </Route>
         <Route path="user" component={ UserPage }>
           <Route path="menu" component={ Menu }/>
           <Route path="events" component={ Events }/>
-          <Route path="/order/:id" component={ Order }/>
+          <Route path="order/:id" component={ Order }/>
         </Route>
       </Route>
     </Route>

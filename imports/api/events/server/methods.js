@@ -3,6 +3,7 @@ import { check } from 'meteor/check';
 
 import { UserEvents } from '../UserEvents.js';
 import { Orders } from '../../orders/Orders.js';
+import { Groups } from '../../groups/Groups.js';
 
 Meteor.methods({
   'Event.createEvent': function(add){
@@ -34,6 +35,11 @@ Meteor.methods({
   'Event.resetEvent': function(idEvent){
     check(idEvent, String);
     Orders.remove({'idEvent': idEvent});
+    if(Roles.userIsInRole(Meteor.userId(), 'admin')){
+      Groups.update({'AdminGroup': Meteor.userId()}, { $set: { menu: []}});
+    }else{
+      Groups.update({ 'users': Meteor.userId()}, { $set: { menu: []}});
+    }
     UserEvents.update({'_id': idEvent}, {$set: {'status': 'ordering'}});
   },
   'Event.checkStatus': function(idEvent){

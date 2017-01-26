@@ -19,7 +19,11 @@ export default class Events extends TrackerReact(React.Component) {
   order (){
     const id = this.refs.table.state.selectedRowKeys;
     if(id.length > 0){
-      browserHistory.push('order/' + id);
+      if(Roles.userIsInRole(Meteor.userId(), 'admin')){
+        browserHistory.push('/panel/admin/order/' + id);
+      }else{
+        browserHistory.push('/panel/user/order/' + id);
+      }
     }else{
       alert('error');
     }
@@ -37,11 +41,13 @@ export default class Events extends TrackerReact(React.Component) {
     if (sub1.ready() && sub2.ready()){
      	if(Roles.userIsInRole(Meteor.userId(), 'admin')){
         this.state = {
-          group: Groups.findOne({'AdminGroup': Meteor.userId()})
+          group: Groups.findOne({'AdminGroup': Meteor.userId()}),
+          user: 'admin'
         }
       }else{
         this.state = {
           group: Groups.findOne( { 'users': Meteor.userId() } ),
+          user: 'user'
         }
       }
       this.state = {

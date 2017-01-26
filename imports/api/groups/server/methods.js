@@ -65,7 +65,7 @@ Meteor.methods({
     }
   },  
   'Groups.insertMenu': function(menu){
-    check( menu, { id: String, name: String, price: Number, coupons: Number }); 
+    check( menu, { id: String, name: String, price: Number, coupons: Number, allCount: Number }); 
     if(Roles.userIsInRole(Meteor.userId(), 'admin')){
       Groups.update({'AdminGroup': Meteor.userId()}, { $push: { 'menu': menu } });
     }else{
@@ -81,7 +81,7 @@ Meteor.methods({
     }
   },
   'Groups.menuRowChange': function(row){
-    check( row, { id: String, name: String, price: Number, coupons: Number });  
+    check( row, { id: String, name: String, price: Number, coupons: Number, allCount: Number  });  
     if(Roles.userIsInRole(Meteor.userId(), 'admin')){
       Groups.update({'AdminGroup': Meteor.userId(), 'menu.id': row.id}, { "$set": { "menu.$": row }});
     }else{
@@ -89,7 +89,7 @@ Meteor.methods({
     }
   },
   'Groups.addCoupon': function(row){
-    check( row, { id: String, name: String, price: Number, coupons: Number });  
+    check( row, { id: String, name: String, price: Number, coupons: Number, allCount: Number  });  
     Groups.update({'AdminGroup': Meteor.userId(), 'menu.id': row.id}, { "$set": { "menu.$": row }});
   }
 });

@@ -65,6 +65,7 @@ export default class Order extends TrackerReact(React.Component) {
           <TableHeaderColumn dataField='id' isKey={ true } autoValue hidden>Product ID</TableHeaderColumn>
           <TableHeaderColumn dataField='name' editable={ false }>Name Item</TableHeaderColumn>
           <TableHeaderColumn dataField='price' editable={ false }>Price, $</TableHeaderColumn>
+          <TableHeaderColumn dataField='allCount' editable={ false }>In Orders</TableHeaderColumn>
           <TableHeaderColumn dataField='count' editable={ true }>Count</TableHeaderColumn>
         </BootstrapTable>
         <div className="container">

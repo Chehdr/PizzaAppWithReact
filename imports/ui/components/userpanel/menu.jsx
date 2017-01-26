@@ -8,12 +8,17 @@ export default class Menu extends TrackerReact(React.Component) {
   menu() {
     const sub = Meteor.subscribe('Groups');
     if (sub.ready() ){
-      return Groups.findOne({'AdminGroup': Meteor.userId()}).menu;  
+      if(Roles.userIsInRole(Meteor.userId(), 'admin')){
+        return Groups.findOne({'AdminGroup': Meteor.userId()}).menu;  
+      }else{
+        return Groups.findOne({'users': Meteor.userId()}).menu;  
+    }
     }
     return []
   }
   onAddRow(row) {
     row.price = parseFloat(row.price);
+    row.allCount = 0;
     row.coupons = 0;
     Meteor.call('Groups.insertMenu', row);
   }
@@ -56,6 +61,7 @@ export default class Menu extends TrackerReact(React.Component) {
           <TableHeaderColumn dataField='name'>Product Name</TableHeaderColumn>
           <TableHeaderColumn dataField='price'>Product Price</TableHeaderColumn>
           <TableHeaderColumn dataField='coupons' editable={ false }>Coupons</TableHeaderColumn>
+          <TableHeaderColumn dataField='allCount' editable={ false }>In Orders</TableHeaderColumn>
         </BootstrapTable>
         <br/>
       </div>
